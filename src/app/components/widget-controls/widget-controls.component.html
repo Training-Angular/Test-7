@@ -8,12 +8,18 @@
   <div id="infoBody" class="collapse show">
     <div class="card-body">
       <div class="info-item">
-        <p>epic_1b_20190627011358 <i class="fas fa-download float-right"></i></p>
-        <p>Processing Version: 02 </p>
-        <p>Distance to Earth: 992,742 miles<i class="fas fa-sync-alt float-right"></i></p>
-        <p>Distance to Sun: 93,495,055 miles<i class="fas fa-sync-alt float-right"></i></p>
-        <p>Sun to Earth: 93,495,055 miles<i class="fas fa-sync-alt float-right"></i></p>
-        <p>SEV Angle: 4.55°<i class="fas fa-question-circle float-right"></i></p>
+        <b>{{epics[currentIndex]?.image}}</b>
+        <p>Processing Version: {{epics[currentIndex]?.version}} </p>
+        <p>Date: {{epics[currentIndex]?.date}}</p>
+        <p>Position of the satellite in space:
+          <span class="ml-3 d-block">x : {{epics[currentIndex]?.dscovr_j2000_position.x}}</span>
+          <span class="ml-3 d-block">y : {{epics[currentIndex]?.dscovr_j2000_position.y}}</span>
+          <span class="ml-3 d-block">z : {{epics[currentIndex]?.dscovr_j2000_position.z}}</span>
+        </p>
+        <p>Geographical coordinates that the satellite is looking at:
+          <span class="ml-3 d-block">Latitude : {{epics[currentIndex]?.centroid_coordinates.lat}}</span>
+          <span class="ml-3 d-block">Longitude : {{epics[currentIndex]?.centroid_coordinates.lon}}</span>
+        </p>
       </div>
     </div>
   </div>
@@ -29,175 +35,30 @@
   <div id="controls" class="collapse show">
     <div class="card-body">
       <div class="row text-center">
-        <div class="showingImg col-lg-12">
-          Showing <span id="currentImg">1</span>of 12.
+        <div class="showingImg col-lg-12 ">
+          Showing <span id="currentImg" class="font-weight-bold">{{currentIndex + 1}} </span>of {{ epics.length }}.
+          <a *ngIf="!isPlay" class="btn btn-secondary text-white controls ml-3 play" (click)="slidePlayer()"><i
+              class="fas fa-play-circle"></i> Play</a>
+          <a *ngIf="isPlay" class="controls btn btn-secondary text-white ml-3 pause" (click)="slidePlayer()"><i
+              class="fas fa-pause-circle"></i>
+            Pause</a>
+        </div>
+        <div class="col-lg-12 mt-2">
+          <b>{{dateEpic.year}}-{{dateEpic.month}}-{{dateEpic.day}} <i class="fas fa-calendar-alt btn btn-secondary"
+              (click)="isShowDatePicker = !isShowDatePicker"></i></b>
+          <ngb-datepicker [startDate]="dateEpic" *ngIf="isShowDatePicker" (select)="onDateSelect($event)">
+          </ngb-datepicker>
         </div>
         <div class="col-lg-12">
-          <a class="controls calendar"><i class="fas fa-calendar-alt"></i>2019-06-27</a>
-
-        </div>
-        <div class="col-lg-6">
-          <a class="controls play"><i class="fas fa-play"></i>Play</a>
-        </div>
-        <div class="col-lg-6">
-          <a class="controls toggle-date"><i class="fas fa-heart"></i>Toggle-day</a>
+          <div class="form-inline d-flex justify-content-center">
+            <label>Imagery:</label>
+            <select [(ngModel)]="imageryOption" (change)="onSelectImagery()" class="form-control ml-2">
+              <option value="natural">Natural</option>
+              <option value="enhanced">Enhanced</option>
+            </select>
+          </div>
         </div>
       </div>
-
-      <span id="zabuto_calendar_uxu" class="hidden cal2cal">
-        <div class="zabuto_calendar" id="zabuto_calendar_uxu">
-          <!-- <table class="table">
-            <tbody>
-              <tr class="calendar-month-header">
-                <th>
-                  <div class="calendar-month-navigation" id="zabuto_calendar_uxu_nav-prev"><span><span
-                        class="glyphicon glyphicon-chevron-left"></span></span></div>
-                </th>
-                <th colspan="5"><span><select id="changeMonth" class="selection">
-                      <option value="1">January</option>
-                      <option value="2">February</option>
-                      <option value="3">March</option>
-                      <option value="4">April</option>
-                      <option value="5">May</option>
-                      <option value="6" selected="selected">June</option>
-                      <option value="7">July</option>
-                      <option value="8">August</option>
-                      <option value="9">September</option>
-                      <option value="10">October</option>
-                      <option value="11">November</option>
-                    </select>&nbsp;<select id="changeYear" class="selection">
-                      <option value="2015">2015</option>
-                      <option value="2016">2016</option>
-                      <option value="2017">2017</option>
-                      <option value="2018">2018</option>
-                      <option value="2019" selected="selected">2019</option>
-                    </select></span></th>
-                <th>
-                  <div class="calendar-month-navigation" id="zabuto_calendar_uxu_nav-next"><span><span
-                        class="glyphicon glyphicon-chevron-right"></span></span></div>
-                </th>
-              </tr>
-              <tr class="calendar-dow-header">
-                <th>Mon</th>
-                <th>Tue</th>
-                <th>Wed</th>
-                <th>Thu</th>
-                <th>Fri</th>
-                <th>Sat</th>
-                <th>Sun</th>
-              </tr>
-              <tr class="calendar-dow">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td id="zabuto_calendar_uxu_2019-06-01" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-01_day" class="day">1</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-02" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-02_day" class="day">2</div>
-                </td>
-              </tr>
-              <tr class="calendar-dow">
-                <td id="zabuto_calendar_uxu_2019-06-03" class="dow-clickable">
-                  <div id="zabuto_calendar_uxu_2019-06-03_day" class="day">3</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-04" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-04_day" class="day">4</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-05" class="dow-clickable">
-                  <div id="zabuto_calendar_uxu_2019-06-05_day" class="day">5</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-06" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-06_day" class="day">6</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-07" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-07_day" class="day">7</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-08" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-08_day" class="day">8</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-09" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-09_day" class="day">9</div>
-                </td>
-              </tr>
-              <tr class="calendar-dow">
-                <td id="zabuto_calendar_uxu_2019-06-10" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-10_day" class="day">10</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-11" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-11_day" class="day">11</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-12" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-12_day" class="day">12</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-13" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-13_day" class="day">13</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-14" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-14_day" class="day">14</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-15" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-15_day" class="day">15</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-16" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-16_day" class="day">16</div>
-                </td>
-              </tr>
-              <tr class="calendar-dow">
-                <td id="zabuto_calendar_uxu_2019-06-17" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-17_day" class="day">17</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-18" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-18_day" class="day">18</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-19" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-19_day" class="day">19</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-20" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-20_day" class="day">20</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-21" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-21_day" class="day">21</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-22" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-22_day" class="day">22</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-23" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-23_day" class="day">23</div>
-                </td>
-              </tr>
-              <tr class="calendar-dow">
-                <td id="zabuto_calendar_uxu_2019-06-24" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-24_day" class="day">24</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-25" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-25_day" class="day">25</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-26" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-26_day" class="day">26</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-27" class="dow-clickable event">
-                  <div id="zabuto_calendar_uxu_2019-06-27_day" class="day">27</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-28" class="dow-clickable">
-                  <div id="zabuto_calendar_uxu_2019-06-28_day" class="day">28</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-29" class="dow-clickable">
-                  <div id="zabuto_calendar_uxu_2019-06-29_day" class="day">29</div>
-                </td>
-                <td id="zabuto_calendar_uxu_2019-06-30" class="dow-clickable">
-                  <div id="zabuto_calendar_uxu_2019-06-30_day" class="day">30</div>
-                </td>
-              </tr>
-            </tbody>
-          </table> -->
-          <div class="legend" id="zabuto_calendar_uxu_legend"></div>
-        </div>
-      </span>
-
-
     </div>
   </div>
 </div>
